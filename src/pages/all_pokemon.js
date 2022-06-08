@@ -43,25 +43,34 @@ export default function PkmnOverview () {
 }
 
 function GetSearchResults () {
+  let containerListFull = false
+  if (containerListFull === false) {
+    containerListFull = document.getElementById('pkmnContainer')
+  }
+  let containerList = containerListFull
   let search = []
+  let toDeleteID = []
   let options = document.getElementById('search').children
   Object.keys(options).map((key) => {
     if (options[key].nodeName !== 'BUTTON') {
-      console.log(options[key])
-      console.log(options[key].value)
       if (options[key].value !== 'all') {
         search.push(options[key].value)
       }
     }
   })
-  console.log(search)
-  let pkmn = document.getElementById('pkmnContainer').children
-  console.log(pkmn)
-  console.log(pkmn[0]['__reactProps$12lkjoz034qh']['children'][2]['props']['value'])
-  console.log(pkmn[0]['__reactProps$12lkjoz034qh']['className'].split(' ')[1])
-  console.log(pkmn[0]['__reactProps$12lkjoz034qh']['children'][2]['props']['value']['id'])
-  console.log(pkmn[0]['__reactProps$12lkjoz034qh']['children'][2]['props']['value']['types'][0]['type']['name'])
-  
+  let pkmn = containerList.children
+  // console.log(pkmn)
+  // console.log(pkmn[0]['childNodes'][2]['_wrapperState']['initialValue'])
+  Object.keys(containerList.children).map((key) => {
+    if (search.includes(pkmn[key]['childNodes'][2]['_wrapperState']['initialValue']['types'][0]['type']['name']) === false) {
+      toDeleteID.push(pkmn[key]['id'])
+    }
+  })
+  toDeleteID.map((id) => {
+    document.getElementById('pkmnContainer').removeChild(document.getElementById(id))
+  })
+  document.getElementById('pkmnContainer').ch = containerList
+  console.log(toDeleteID)
 }
 
 function GetEveryPkmn () {
