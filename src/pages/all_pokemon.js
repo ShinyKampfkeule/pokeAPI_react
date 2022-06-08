@@ -1,9 +1,10 @@
 import {useState, useEffect} from "react"
+import {type} from "@testing-library/user-event/dist/type";
 
 export default function PkmnOverview () {
 
-  function handleChange (value) {
-    console.log(value)
+  const handleChange = () => {
+    console.log(document.getElementById('searchGen'))
   }
 
   const [pkmnList, setPkmnList] = useState(<GetEveryPkmn />)
@@ -13,22 +14,54 @@ export default function PkmnOverview () {
       <h1 className="grid-element-1-2 heading">
         Pokedex
       </h1>
-      <select id="searchGen" onChange={handleChange(this)}>
-        <option value="all">All</option>
-        <option value="gen-1">Gen-1</option>
-        <option value="gen-2">Gen-2</option>
-        <option value="gen-3">Gen-3</option>
-        <option value="gen-4">Gen-4</option>
-        <option value="gen-5">Gen-5</option>
-        <option value="gen-6">Gen-6</option>
-        <option value="gen-7">Gen-7</option>
-        <option value="gen-8">Gen-8</option>
-        <option value="gen-9">Gen-9</option>
-      </select>
+      <form id="search">
+        <select id="searchGen">
+          <option value="all">All</option>
+          <option value="gen-1">Gen-1</option>
+          <option value="gen-2">Gen-2</option>
+          <option value="gen-3">Gen-3</option>
+          <option value="gen-4">Gen-4</option>
+          <option value="gen-5">Gen-5</option>
+          <option value="gen-6">Gen-6</option>
+          <option value="gen-7">Gen-7</option>
+          <option value="gen-8">Gen-8</option>
+          <option value="gen-9">Gen-9</option>
+        </select>
+        <select id="searchType">
+          <option value="all">All</option>
+          <option value="grass">grass</option>
+          <option value="water">water</option>
+          <option value="flying">flying</option>
+          <option value="dragon">dragon</option>
+        </select>
+        <button type="button" onClick={GetSearchResults}>Search</button>
+      </form>
       {pkmnList}
     </div>
   )
 
+}
+
+function GetSearchResults () {
+  let search = []
+  let options = document.getElementById('search').children
+  Object.keys(options).map((key) => {
+    if (options[key].nodeName !== 'BUTTON') {
+      console.log(options[key])
+      console.log(options[key].value)
+      if (options[key].value !== 'all') {
+        search.push(options[key].value)
+      }
+    }
+  })
+  console.log(search)
+  let pkmn = document.getElementById('pkmnContainer').children
+  console.log(pkmn)
+  console.log(pkmn[0]['__reactProps$12lkjoz034qh']['children'][2]['props']['value'])
+  console.log(pkmn[0]['__reactProps$12lkjoz034qh']['className'].split(' ')[1])
+  console.log(pkmn[0]['__reactProps$12lkjoz034qh']['children'][2]['props']['value']['id'])
+  console.log(pkmn[0]['__reactProps$12lkjoz034qh']['children'][2]['props']['value']['types'][0]['type']['name'])
+  
 }
 
 function GetEveryPkmn () {
@@ -58,7 +91,7 @@ function GetEveryPkmn () {
 function PkmnData({data}) {
   return(
     <div className="grid-element-2-2">
-      <div className="display-grid-container">
+      <div className="display-grid-container" id="pkmnContainer">
         {data.results.map((entry) =>
           <>
             <GetSinglePokemon entry={entry} />
@@ -150,34 +183,35 @@ function GetSinglePokemon({entry}) {
               name = singleData.name
           }
 
-          let id
+          let className
 
           if (singleData.id <= 151) {
-            id = 'gen1'
+            className = 'display-container gen1'
           } else if (singleData.id <= 251) {
-            id = 'gen2'
+            className = 'display-container gen2'
           } else if (singleData.id <= 386) {
-            id = 'gen3'
+            className = 'display-container gen3'
           } else if (singleData.id <= 493) {
-            id = 'gen4'
+            className = 'display-container gen4'
           } else if (singleData.id <= 649) {
-            id = 'gen5'
+            className = 'display-container gen5'
           } else if (singleData.id <= 721) {
-            id = 'gen6'
+            className = 'display-container gen6'
           } else if (singleData.id <= 809) {
-            id = 'gen7'
+            className = 'display-container gen7'
           } else if (singleData.id <= 905) {
-            id = 'gen8'
+            className = 'display-container gen8'
           } else {
-            id = 'gen9'
+            className = 'display-container gen9'
           }
 
           setReturnData(
-            <div className="display-container" id={id}>
+            <div className={className} id={singleData.id}>
               <div className="sprite-container">
                 <img alt={name} src={singleData.sprites.front_default} />
               </div>
               <p className="name"><b>{name}</b></p>
+              <input type="hidden" value={singleData} />
             </div>
           )
       })
